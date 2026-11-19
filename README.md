@@ -6,11 +6,9 @@ Aplicação para Computação Gráfica contextualizada no **Mercado Boa Vizinhan
 
 ## Conteúdo deste repositório
 
-Inclui código, testes, modelo de segmentação local, bibliotecas de visualização com suas licenças, roteiro e PDF revisado da apresentação. Banco de dados, fotos capturadas, logs, credenciais e ambientes locais não são publicados.
+Inclui código do aplicativo, testes, modelo de segmentação local e bibliotecas de visualização com suas licenças. Banco de dados, fotos capturadas, logs, credenciais e ambientes locais não são publicados.
 
-Um clone novo começa com a biblioteca vazia. O banco SQLite e a pasta de capturas são criados na primeira execução de `app.py`. As referências a 7 capturas e 78 arquivos nos documentos de revisão registram uma conferência local; esses dados não acompanham o repositório.
-
-O material atual de apresentação tem 10 slides: use o PDF revisado e `ROTEIRO_FALAS_10_SLIDES_VITRINE_3D.md`. Outros prompts e roteiros foram preservados como referências de etapas anteriores do projeto.
+Um clone novo começa com a biblioteca vazia. O banco SQLite e a pasta de capturas são criados na primeira execução de `app.py`.
 
 ## Executar no Windows
 
@@ -33,12 +31,6 @@ cloudflared tunnel --url http://127.0.0.1:5000
 ```
 
 Abra no celular o endereço HTTPS gerado e permita o acesso à câmera. Mantenha o computador e o túnel ativos. Three.js e Socket.IO estão incluídos em `static/vendor/`, nas mesmas versões utilizadas anteriormente. A interface e o processamento local no PC não dependem de CDN ou fontes externas. O link público via Cloudflare continua exigindo internet; a câmera real e o WebGL dependem do aparelho e das permissões do navegador.
-
-### Apresentação pronta
-
-Execute `INICIAR_APRESENTACAO.cmd` para conferir o modelo, o banco e as imagens e iniciar na porta 5002. Acesse http://127.0.0.1:5002 e mantenha a janela aberta. A verificação também pode ser executada separadamente com `.\.venv\Scripts\python.exe verificar_apresentacao.py`; ela não altera o banco.
-
-O PDF revisado está em `output/pdf/Vitrine_3D_revisado.pdf`; o roteiro de fala está em `ROTEIRO_FALAS_10_SLIDES_VITRINE_3D.md`. O guia `APRESENTACAO_FINAL.md` reúne o ensaio, a análise dos slides e o procedimento para o celular.
 
 Se a porta estiver ocupada, inicie em outra porta e aponte o túnel para ela:
 
@@ -129,13 +121,9 @@ Também são testados: captura de objeto simétrico, fotografia manual durante a
 
 Os módulos antigos de leitura de código e seus testes foram preservados para compatibilidade, mas não são iniciados pela interface de captura de objetos. Câmera, foco, luz, voz, renderização WebGL e qualidade do recorte precisam ser conferidos no aparelho e nos objetos utilizados.
 
-## Refinamento visual e preservação do projeto
+## Interface
 
-O acabamento da interface fica em `static/css/polish.css`, carregado após o estilo existente. Essa camada organiza contraste, espaçamentos, foco de teclado, campos, botões, cards e estados visuais. Os links existentes de navegação continuam acessíveis em telas pequenas, com espaço reservado para a área segura do celular. O template também oferece um link para pular ao conteúdo principal e descrições acessíveis para os controles.
-
-O polimento não modifica os arquivos JavaScript, a temporização da captura, a geração do volume, a remoção do fundo, os endpoints ou as integrações. A captura manual, a câmera de fotos do celular, a biblioteca e os ajustes de forma continuam usando os mesmos controles e fluxos.
-
-Na revisão de 14/11/2026, o SQLite foi aberto em modo somente leitura: verificação de integridade sem erros, colunas compatíveis, campos JSON válidos e índices de chave primária presentes. O volume atual não justificou novos índices. Nenhuma tabela, coluna, relação, captura, imagem ou ajuste salvo foi alterado pelo refinamento. A conferência de preservação compara os hashes dos arquivos protegidos e os identificadores dos controles antes e depois das mudanças.
+Os estilos ficam em `static/css/`: a base da interface, os ajustes de acessibilidade e responsividade e as ferramentas de organização e clipping. Os controles de câmera, captura manual, biblioteca e visualização usam os módulos em `static/js/`. A navegação se adapta a telas pequenas e inclui foco visível e descrições acessíveis para os controles.
 
 ## Componentes de terceiros
 

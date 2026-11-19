@@ -37,6 +37,15 @@ static/uploads/
 *.pfx
 *.p12
 
+# Local presentation materials, prompts and speaking notes
+/APRESENTACAO_*.md
+/EMPRESA_E_PROMPT_*.md
+/PROMPT_APRESENTACAO_*.txt
+/ROTEIRO_*.md
+/INICIAR_APRESENTACAO.cmd
+/verificar_apresentacao.py
+/output/
+
 # Temporary and operating-system files
 tmp/
 *.tmp
