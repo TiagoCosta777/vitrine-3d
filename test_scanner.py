@@ -75,7 +75,7 @@ class ScannerTests(unittest.TestCase):
         response = self.client.get('/')
         self.assertIn('coachTitle', response.text)
         self.assertIn('objectCapture', response.text)
-        self.assertIn('app.js?v=14', response.text)
+        self.assertIn('app.js?v=15', response.text)
         self.assertIn('id="quickCapture"', response.text)
         self.assertIn('id="nativeCapture"', response.text)
         self.assertIn('id="cameraSelect"', response.text)

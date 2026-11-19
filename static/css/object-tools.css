@@ -1,4 +1,16 @@
 /* Saved-object tools and non-destructive clipping controls. */
+.danger-button { color: #a12424; border-color: #e1b5b5; background: #fff; }
+.delete-dialog .danger-button:hover, .object-manager .danger-button:hover { color: #8a1b1b; border-color: #bc7474; background: #fff0f0; }
+.delete-dialog { width: min(480px, calc(100vw - 32px)); max-height: calc(100svh - 40px); overflow: auto; padding: 26px; border: 1px solid #dbe5eb; border-radius: 16px; color: #163343; box-shadow: 0 18px 70px #16334335; }
+.delete-dialog::backdrop { background: #10293980; }
+.delete-dialog h2 { font-size: 20px; line-height: 1.4; margin-bottom: 12px; }
+.delete-dialog p { font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.delete-dialog label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+.delete-dialog input { font-size: 16px; min-height: 46px; }
+.delete-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+.delete-dialog .delete-error { min-height: 24px; color: #a12424; margin: 10px 0; }
+.delete-dialog button { min-height: 44px; }
+@media(max-width:460px) { .delete-dialog { padding: 20px; } .delete-dialog-actions button { flex: 1 1 140px; } }
 .object-manager, .clipping-controls {
   margin: 0 22px 18px;
   padding-top: 18px;

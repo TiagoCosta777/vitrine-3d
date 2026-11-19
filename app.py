@@ -4,7 +4,9 @@ import io
 import json
 import math
 import os
+import shutil
 import sqlite3
+import tempfile
 import threading
 import time
 import uuid
@@ -14,6 +16,7 @@ from pathlib import Path
 from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO
 from PIL import Image, ImageOps
+from werkzeug.security import check_password_hash
 from barcode_decoder import decode_barcode
 from object_background import (BackgroundModelUnavailable, BackgroundRemovalError,
                                get_model_status, remove_background)
@@ -27,6 +30,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'scanner3d-dev')
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 app.config['TEMPLATES_AUTO_RELOAD'] = os.environ.get('SCANNER_RELOAD') == '1'
+app.config['SCAN_DELETE_PASSWORD_HASH'] = os.environ.get(
+    'SCAN_DELETE_PASSWORD_HASH',
+    'scrypt:32768:8:1$AimMZs3AIeCxKkfa$7c86aceeb0c909761476aa75631e492346726ec4a2f3ce2eeca2c5f68157a1be51fb1423cfd9642cffcda5556b2b8470f031f16aac05f0af476c34c8d6fbc4a8')
 socketio = SocketIO(app, cors_allowed_origins='*', async_mode='threading')
 background_lock = threading.Lock()
 
@@ -263,6 +269,77 @@ def archive_scan(scan_id):
 @app.post('/api/scans/<scan_id>/restore')
 def restore_scan(scan_id):
     return set_scan_archived(scan_id, False)
+
+
+def scan_image_paths(row):
+    paths = set()
+    root = UPLOAD_DIR.resolve()
+    for field in ('views', 'original_views'):
+        views = json.loads(row[field] or '{}')
+        if not isinstance(views, dict):
+            raise ValueError('Invalid image metadata')
+        for url in views.values():
+            if not isinstance(url, str) or not url.startswith('/static/uploads/'):
+                raise ValueError('Invalid image URL')
+            path = (root / url[len('/static/uploads/'):]).resolve()
+            if path == root or not path.is_relative_to(root) or path.exists() and not path.is_file():
+                raise ValueError('Invalid image path')
+            paths.add(path)
+    return paths
+
+
+@app.delete('/api/scans/<scan_id>')
+def delete_scan(scan_id):
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or not isinstance(data.get('password'), str):
+        return jsonify(ok=False, error='Informe a senha para excluir o objeto.'), 400
+    password = data['password']
+    if len(password) > 256 or not check_password_hash(app.config['SCAN_DELETE_PASSWORD_HASH'], password):
+        return jsonify(ok=False, error='Senha incorreta. O objeto não foi excluído.'), 403
+    if not background_lock.acquire(blocking=False):
+        return jsonify(ok=False, error='Há imagens sendo processadas. Aguarde e tente novamente.'), 409
+    moved = []
+    staging = None
+    cleanup = False
+    try:
+        with db() as conn:
+            conn.execute('BEGIN IMMEDIATE')
+            row = conn.execute('SELECT * FROM scans WHERE id=?', (scan_id,)).fetchone()
+            if row is None:
+                return jsonify(ok=False, error='Captura não encontrada.'), 404
+            files = scan_image_paths(row)
+            for other in conn.execute('SELECT views, original_views FROM scans WHERE id<>?', (scan_id,)):
+                files.difference_update(scan_image_paths(other))
+            # Move only this capture's unshared images outside the public directory.
+            # If the database operation fails, every moved image is restored.
+            private_root = DB_PATH.resolve().parent / '.deleted-scans'
+            private_root.mkdir(exist_ok=True)
+            staging = Path(tempfile.mkdtemp(prefix='scan-', dir=private_root))
+            for index, source in enumerate(sorted(files)):
+                if source.is_file():
+                    target = staging / str(index)
+                    source.replace(target)
+                    moved.append((source, target))
+            conn.execute('DELETE FROM scans WHERE id=?', (scan_id,))
+        cleanup = True
+    except (OSError, ValueError, TypeError, sqlite3.Error):
+        for original, target in reversed(moved):
+            try:
+                target.replace(original)
+            except OSError:
+                app.logger.exception('Could not restore a staged image; private recovery copy retained.')
+        cleanup = all(not target.exists() for _, target in moved)
+        return jsonify(ok=False, error='Não foi possível excluir o objeto. Tente novamente.'), 409
+    finally:
+        if staging is not None and cleanup:
+            try:
+                shutil.rmtree(staging)
+            except OSError:
+                app.logger.warning('Temporary deleted-image cleanup is pending.')
+        background_lock.release()
+    payload = {'id': scan_id}
+    socketio.emit('object_scan_deleted', payload)
+    return jsonify(ok=True, **payload)
 
 
 @app.get('/api/background/status')

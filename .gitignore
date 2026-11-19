@@ -22,6 +22,7 @@ htmlcov/
 
 # Local data: never publish captures, databases, logs or credentials
 static/uploads/
+.deleted-scans/
 *.db
 *.db-*
 *.sqlite

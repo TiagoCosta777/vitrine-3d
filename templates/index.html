@@ -7,7 +7,7 @@
   <title>Vitrine 3D · Captura e biblioteca de produtos</title>
   <link rel="stylesheet" href="/static/css/style.css?v=14">
   <link rel="stylesheet" href="/static/css/polish.css?v=2">
-  <link rel="stylesheet" href="/static/css/object-tools.css?v=1">
+  <link rel="stylesheet" href="/static/css/object-tools.css?v=2">
   <link rel="stylesheet" href="/static/css/presentation.css?v=1">
   <script src="/static/vendor/socket.io/socket.io.min.js" defer></script>
   <script type="importmap">{"imports":{"three":"/static/vendor/three/build/three.module.js","three/addons/":"/static/vendor/three/examples/jsm/"}}</script>
@@ -63,7 +63,7 @@
             <div class="object-tools-heading"><div><h3 id="objectManagerTitle">Organizar este objeto</h3><p>Renomeie ou mova para os arquivados, mantendo as fotos.</p></div></div>
             <label for="savedObjectName">Nome na biblioteca</label>
             <div class="object-name-row"><input id="savedObjectName" maxlength="120" autocomplete="off"><button id="saveObjectName" type="button">Salvar nome</button></div>
-            <div class="object-manager-actions"><button id="archiveObject" type="button">Arquivar objeto</button><button id="restoreObject" type="button" hidden>Restaurar objeto</button></div>
+            <div class="object-manager-actions"><button id="archiveObject" type="button">Arquivar objeto</button><button id="restoreObject" type="button" hidden>Restaurar objeto</button><button id="deleteObject" type="button" class="danger-button">Excluir objeto</button></div>
             <p id="objectManageStatus" class="object-tool-status" role="status" aria-live="polite"></p>
           </section>
           <div class="legacy-capture-actions"><button id="removeSavedBackground" hidden>Remover fundo desta captura</button></div>
@@ -84,6 +84,16 @@
       <footer><span>vitrine<strong>3D</strong></span><span>Uma nova dimensão para seus produtos.</span><span>Volume 3D · V14</span></footer>
     </main>
   </div>
-  <script type="module" src="/static/js/app.js?v=14"></script>
+  <dialog id="deleteObjectDialog" class="delete-dialog" aria-labelledby="deleteDialogTitle" aria-describedby="deleteDialogDescription">
+    <form id="deleteObjectForm">
+      <h2 id="deleteDialogTitle">Excluir objeto definitivamente?</h2>
+      <p id="deleteDialogDescription">A captura <strong id="deleteObjectName"></strong>, suas fotos e seus ajustes serão excluídos. Esta ação não pode ser desfeita. Para apenas ocultar o objeto, use Arquivar.</p>
+      <label for="deletePassword">Senha de confirmação</label>
+      <input id="deletePassword" type="password" autocomplete="off" maxlength="256" required aria-describedby="deleteObjectError">
+      <p id="deleteObjectError" class="delete-error" role="alert"></p>
+      <div class="delete-dialog-actions"><button id="cancelDeleteObject" type="button">Cancelar</button><button id="confirmDeleteObject" type="submit" class="danger-button">Excluir definitivamente</button></div>
+    </form>
+  </dialog>
+  <script type="module" src="/static/js/app.js?v=15"></script>
 </body>
 </html>

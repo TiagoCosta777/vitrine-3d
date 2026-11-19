@@ -13,6 +13,7 @@ const stability=new ObjectStability();
 let productViewer=null,pendingVisual=null,selectedScanId=null,libraryRequest=0,removingSaved=false;
 let libraryScans=[],libraryDataScope='active',libraryLoaded=false,libraryLoading=false,libraryNotice='';
 let managementBusy=false,managementRequest=0;
+let deleteTargetId=null;
 let shapeSaveTimer=null,shapeRevision=0,shapeSaving=false;
 let pendingShapeSave=null;
 const shapeSaveQueues=new Map();
@@ -54,6 +55,7 @@ socket.on('disconnect',()=>{$('connection').textContent='Reconectando…';$('con
 socket.on('connect_error',()=>{$('connection').textContent='Sem conexão com o servidor';$('connection').className='connection offline'});
 socket.on('object_scanned',data=>{if(!objectActive&&!managementBusy&&(!removingSaved||data.id===selectedScanId))showObjectScan(data);else loadLibrary(false)});
 socket.on('object_scan_updated',data=>{handleScanUpdated(data)});
+socket.on('object_scan_deleted',data=>{handleScanDeleted(data)});
 socket.on('object_shape_updated',data=>{
   if(data.id!==selectedScanId||shapeSaveTimer||shapeSaving)return;
   if(pendingVisual)pendingVisual.shape_options=normalizeShapeOptions(data.shape_options);
@@ -376,6 +378,7 @@ function renderObjectManager(){
   $('archiveObject').hidden=!selected||!!pendingVisual.archived;
   $('restoreObject').hidden=!selected||!pendingVisual.archived;
   $('archiveObject').disabled=$('restoreObject').disabled=!selected||blocked;
+  $('deleteObject').disabled=!selected||blocked;
   $('shapeForm').disabled=$('shapeWidth').disabled=$('shapeDepth').disabled=$('resetShape').disabled=managementBusy;
 }
 function rememberScan(data){
@@ -438,6 +441,51 @@ async function manageSelectedObject(action){
     await loadLibrary(false);
   }catch(error){if(request===managementRequest&&id===selectedScanId)$('objectManageStatus').textContent='Não foi possível concluir: '+error.message+' Tente novamente.'}
   finally{if(request===managementRequest){managementBusy=false;renderWorkflow();renderObjectManager()}}
+}
+function handleScanDeleted(data){
+  if(!data?.id)return;
+  libraryScans=libraryScans.filter(scan=>scan.id!==data.id);
+  if(deleteTargetId===data.id&&$('deleteObjectDialog').open)$('deleteObjectDialog').close();
+  if(data.id===selectedScanId){
+    clearTimeout(shapeSaveTimer);shapeSaveTimer=null;pendingShapeSave=null;
+    clearSelectedObject();
+  }
+  libraryNotice='Objeto excluído da biblioteca.';
+  void loadLibrary(false);
+}
+function openDeleteDialog(){
+  if(!selectedScanId||!pendingVisual||managementBlocked())return;
+  deleteTargetId=selectedScanId;
+  $('deleteObjectName').textContent=pendingVisual.name||'Objeto sem nome';
+  $('deletePassword').value='';$('deleteObjectError').textContent='';
+  $('deleteObjectDialog').showModal();$('deletePassword').focus();
+}
+function setDeleteBusy(busy){
+  $('deletePassword').disabled=$('cancelDeleteObject').disabled=$('confirmDeleteObject').disabled=busy;
+  $('confirmDeleteObject').textContent=busy?'Excluindo…':'Excluir definitivamente';
+}
+async function confirmDeleteObject(event){
+  event.preventDefault();
+  const id=deleteTargetId;
+  if(!id||id!==selectedScanId||managementBlocked())return;
+  const password=$('deletePassword').value;
+  $('deletePassword').value='';$('deleteObjectError').textContent='';
+  managementBusy=true;setDeleteBusy(true);renderWorkflow();renderObjectManager();
+  try{
+    const response=await fetchWithTimeout('/api/scans/'+encodeURIComponent(id),{
+      method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})
+    },20000);
+    const data=await response.json();
+    if(!response.ok||!data.ok||data.id!==id)throw new Error(data.error||'Não foi possível excluir o objeto.');
+    if($('deleteObjectDialog').open)$('deleteObjectDialog').close();
+    handleScanDeleted(data);setStatus('Objeto excluído. As outras capturas foram preservadas.');
+  }catch(error){
+    $('deleteObjectError').textContent=error.message;
+    if($('deleteObjectDialog').open)$('deletePassword').focus();
+  }finally{
+    managementBusy=false;setDeleteBusy(false);renderWorkflow();renderObjectManager();
+    if($('deleteObjectDialog').open)$('deletePassword').focus();
+  }
 }
 const emptyLibrary=$('scanLibrary').firstElementChild.cloneNode(true);
 function renderLibrary(){
@@ -525,6 +573,11 @@ $('saveObjectName').addEventListener('click',()=>{void manageSelectedObject('ren
 $('savedObjectName').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();void manageSelectedObject('rename')}});
 $('archiveObject').addEventListener('click',()=>{void manageSelectedObject('archive')});
 $('restoreObject').addEventListener('click',()=>{void manageSelectedObject('restore')});
+$('deleteObject').addEventListener('click',openDeleteDialog);
+$('deleteObjectForm').addEventListener('submit',event=>{void confirmDeleteObject(event)});
+$('cancelDeleteObject').addEventListener('click',()=>{if(!managementBusy)$('deleteObjectDialog').close()});
+$('deleteObjectDialog').addEventListener('cancel',event=>{if(managementBusy)event.preventDefault()});
+$('deleteObjectDialog').addEventListener('close',()=>{deleteTargetId=null;$('deletePassword').value='';$('deleteObjectError').textContent=''});
 $('removeSavedBackground').addEventListener('click',removeSavedBackground);
 $('shapeForm').addEventListener('change',applyShapeControls);$('shapeWidth').addEventListener('input',applyShapeControls);$('shapeDepth').addEventListener('input',applyShapeControls);
 $('resetShape').addEventListener('click',()=>{syncShapeControls({});applyShapeControls()});

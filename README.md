@@ -102,16 +102,18 @@ O plano não gera uma tampa na seção cortada nem recupera o interior físico d
 
 ## Gerenciar a biblioteca
 
-Use **Buscar objetos**, **Ordenar** e **Coleção** para localizar as capturas. Selecione uma para **Salvar nome**, **Arquivar objeto** ou **Restaurar objeto**. O arquivamento é reversível e mantém as imagens, os ajustes e o identificador do registro. A coleção de arquivados permite consultar e restaurar os itens. Não há exclusão permanente nesses controles.
+Use **Buscar objetos**, **Ordenar** e **Coleção** para localizar as capturas. Selecione uma para **Salvar nome**, **Arquivar objeto** ou **Restaurar objeto**. O arquivamento é reversível e mantém as imagens, os ajustes e o identificador do registro. A coleção de arquivados permite consultar e restaurar os itens.
+
+**Excluir objeto** abre uma confirmação com campo de senha. A senha é validada pelo servidor, não pelo navegador. A exclusão remove definitivamente o registro e as imagens que não forem compartilhadas com outra captura; cancelar ou informar a senha incorreta mantém o objeto. A senha não é armazenada no navegador. O hash de confirmação pode ser configurado no servidor pela variável `SCAN_DELETE_PASSWORD_HASH`. Atualizações de exclusão são comunicadas aos outros dispositivos conectados.
 
 Os controles de gerenciamento aguardam o término de capturas, processamento e salvamentos em andamento. A migração acrescenta apenas a coluna `archived` à tabela `scans`, com os registros existentes ativos por padrão. Os endpoints existentes permanecem disponíveis; `GET /api/scans` lista ativos e `GET /api/scans?archived=1` lista arquivados.
 
-Novos endpoints de gerenciamento: `PATCH /api/scans/<id>` com JSON `{"name":"Nome do objeto"}`, `POST /api/scans/<id>/archive` e `POST /api/scans/<id>/restore`. As atualizações emitem `object_scan_updated` pelo Socket.IO.
+Novos endpoints de gerenciamento: `PATCH /api/scans/<id>` com JSON `{"name":"Nome do objeto"}`, `POST /api/scans/<id>/archive` e `POST /api/scans/<id>/restore`. As atualizações emitem `object_scan_updated` pelo Socket.IO. A exclusão usa `DELETE /api/scans/<id>` com a senha no corpo JSON e emite `object_scan_deleted`.
 
 ## Testes
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest -v test_scanner test_object_background test_object_pipeline test_barcode_decoder
+.\.venv\Scripts\python.exe -m unittest -v test_scanner test_object_background test_object_pipeline test_barcode_decoder test_scan_deletion
 node --test --test-timeout=15000 test_scanner.mjs test_camera_logic.mjs test_camera_session.mjs test_capture_runtime.mjs test_viewer_logic.mjs test_object_shape.mjs test_clipping_logic.mjs test_library_logic.mjs test_local_reader.mjs
 ```
 
