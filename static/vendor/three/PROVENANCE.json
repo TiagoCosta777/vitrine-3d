@@ -1,0 +1,32 @@
+{
+  "package": "three",
+  "version": "0.181.0",
+  "license": "MIT",
+  "modified": false,
+  "files": [
+    {
+      "file": "build/three.module.js",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.module.js",
+      "bytes": 626216,
+      "sha256": "99b94b6829da8e751ef48147e3a7eebae861bd4087dbcb7c3a85af03a4210933"
+    },
+    {
+      "file": "build/three.core.js",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.core.js",
+      "bytes": 1405971,
+      "sha256": "03fb6e9fa08628385a9096948593251ae473239c7039496d7c280cba73d84631"
+    },
+    {
+      "file": "examples/jsm/controls/OrbitControls.js",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.181.0/examples/jsm/controls/OrbitControls.js",
+      "bytes": 38697,
+      "sha256": "e1cdf5833c6e0aa095bd1a4f67dffe68f35677a992e1fb26fe374b5b759ce267"
+    },
+    {
+      "file": "LICENSE",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.181.0/LICENSE",
+      "bytes": 1081,
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    }
+  ]
+}

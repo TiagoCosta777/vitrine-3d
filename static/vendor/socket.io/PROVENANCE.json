@@ -1,0 +1,26 @@
+﻿{
+    "package":  "socket.io",
+    "version":  "4.8.1",
+    "license":  "MIT",
+    "modified":  false,
+    "files":  [
+                  {
+                      "file":  "socket.io.min.js",
+                      "source":  "https://cdn.socket.io/4.8.1/socket.io.min.js",
+                      "bytes":  46831,
+                      "sha256":  "b0e735814f8dcfecd6cdb8a7ce95a297a7e1e5f2727a29e6f5901801d52fa0c5"
+                  },
+                  {
+                      "file":  "LICENSE",
+                      "source":  "https://cdn.jsdelivr.net/npm/socket.io-client@4.8.1/LICENSE",
+                      "bytes":  1116,
+                      "sha256":  "73cb68c437d59e066f9386ef97be57298df4db119fdbd7d7150817c6dbd9f189"
+                  },
+                  {
+                      "source":  "https://cdn.socket.io/4.8.1/socket.io.min.js.map",
+                      "file":  "socket.io.min.js.map",
+                      "bytes":  196256,
+                      "sha256":  "4a708dc26393eb54c528a717bb2673f7dac47abf578dbf6b3b5e8ed96217d520"
+                  }
+              ]
+}

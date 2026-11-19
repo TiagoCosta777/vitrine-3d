@@ -1,0 +1,10 @@
+{
+  "name": "zxing-wasm",
+  "version": "3.1.6",
+  "license": "MIT (wrapper); Apache-2.0 (ZXing-C++ core)",
+  "repository": "https://github.com/Sec-ant/zxing-wasm",
+  "source": "https://registry.npmjs.org/zxing-wasm/-/zxing-wasm-3.1.6.tgz",
+  "integrity": "sha512-mU7UNuvl+hOT+nlSOQTMHZ2tM8lRMsbjDIp5IO/+HmBl/FOq77q0OSZPJ3cm42A9c1MKU6Uve67FiGdkhsrT9g==",
+  "readerWasmSha256": "5003fb4b88c4fbd1fd518a2fd8c8ad365c519e183a08c03a322dddfea3cea84e",
+  "zxingCppCommit": "2c3dcfeffa7878950a58c1703c86774a428b0c91"
+}

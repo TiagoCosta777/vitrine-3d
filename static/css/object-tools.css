@@ -1,0 +1,92 @@
+/* Saved-object tools and non-destructive clipping controls. */
+.object-manager, .clipping-controls {
+  margin: 0 22px 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.object-tools-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.object-tools-heading > div, .object-name-row > input { min-width: 0; }
+.object-tools-heading h3 { font-size: 13px; color: #4e4268; margin: 0 0 5px; }
+.object-tools-heading p, .object-tool-help {
+  color: #667085;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+.object-tool-help { margin-top: 10px; }
+.object-manager > label, .clipping-fields > label, .library-tools > label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: #475467;
+  font-size: 12px;
+}
+.object-name-row { display: flex; gap: 8px; margin-top: 7px; }
+.object-name-row input { flex: 1; }
+.object-name-row button { flex-shrink: 0; }
+.object-manager-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.object-tool-status, .library-result-count { font-size: 12px; color: #65527e; line-height: 1.6; }
+.object-tool-status { min-height: 19px; margin: 9px 0 0; }
+.object-tool-status:empty { min-height: 0; margin-top: 0; }
+.clipping-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  color: #56446e;
+  font-size: 13px;
+  cursor: pointer;
+}
+.clipping-check input[type=checkbox] {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--purple);
+}
+.clipping-fields { display: grid; grid-template-columns: minmax(115px, .8fr) minmax(0, 1.3fr); gap: 14px; margin: 8px 0 12px; }
+.clipping-fields > label:last-child { grid-template-columns: 1fr auto; }
+.clipping-fields input[type=range] { grid-column: 1 / -1; width: 100%; padding: 0; min-height: 44px; accent-color: var(--purple); }
+.clipping-fields output { color: #66527e; font-variant-numeric: tabular-nums; }
+.clipping-fields select, .library-tools select {
+  min-width: 0;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #d8ddea;
+  border-radius: 9px;
+  padding: 9px 10px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+#clipSide[aria-pressed=true] { color: #5b43a8; background: #efe9ff; border-color: #c7b5e5; }
+.library-tools { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(150px, .8fr) minmax(145px, .8fr); gap: 14px; margin: 18px 0 12px; }
+.library-result-count { color: #667085; min-height: 19px; margin: 0 0 14px; }
+.object-manager button, .clipping-controls button { min-height: 44px; font-size: 12px; }
+.object-manager input:focus-visible, .library-tools input:focus-visible,
+.library-tools select:focus-visible, .clipping-controls select:focus-visible,
+.clipping-controls input:focus-visible { outline: 3px solid var(--focus, #5940ad); outline-offset: 3px; }
+@media (max-width: 780px) {
+  .library-tools { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .library-tools > label:first-child { grid-column: 1 / -1; }
+  .object-manager input, .library-tools input, .library-tools select, .clipping-fields select { font-size: 16px; }
+}
+@media (max-width: 460px) {
+  .object-manager, .clipping-controls { margin-inline: 17px; }
+  .object-name-row { flex-direction: column; }
+  .object-tools-heading { flex-wrap: wrap; }
+  .object-tools-heading .text-button { padding-left: 0; }
+  .clipping-fields { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .library-tools { gap: 10px; }
+}
+@media (pointer: coarse) {
+  .object-manager input, .library-tools input, .library-tools select, .clipping-fields select { font-size: 16px; }
+}

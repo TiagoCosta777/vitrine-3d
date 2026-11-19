@@ -1,0 +1,45 @@
+# Local environments and developer tooling
+.venv/
+venv/
+env/
+node_modules/
+.qa/
+.codex/
+.agents/
+.aws/
+.ssh/
+.vscode/
+.idea/
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local data: never publish captures, databases, logs or credentials
+static/uploads/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.log
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+
+# Temporary and operating-system files
+tmp/
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store

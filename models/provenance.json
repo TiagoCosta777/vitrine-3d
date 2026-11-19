@@ -1,0 +1,16 @@
+{
+  "model": "u2netp",
+  "architecture": "U-2-Net compact salient foreground segmentation",
+  "file": "u2netp.onnx",
+  "size_bytes": 4574861,
+  "source": "https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx",
+  "upstream_model": "https://github.com/xuebinqin/U-2-Net",
+  "preprocessing_reference": "https://github.com/danielgatis/rembg/blob/main/rembg/sessions/u2netp.py",
+  "upstream_published_md5": "8e83ca70e441ab06c318d82300c84806",
+  "sha256": "309c8469258dda742793dce0ebea8e6dd393174f89934733ecc8b14c76f4ddd8",
+  "licenses": {
+    "U-2-Net": "Apache-2.0, see LICENSE-U2NET.txt",
+    "rembg": "MIT, see LICENSE-REMBG.txt"
+  },
+  "inference": "Local CPU only. Input RGB normalized to 1x3x320x320. No image upload to a third party."
+}

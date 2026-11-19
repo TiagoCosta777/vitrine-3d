@@ -1,0 +1,53 @@
+/* Presentation polish: preserve existing controls, layouts and application state. */
+:root {
+  --purple: #0b3a56;
+  --ink: #163343;
+  --muted: #526776;
+  --focus: #197ca5;
+  --border: #dbe5eb;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--ink);
+  background: #f5f7f9;
+}
+body, button, input, select, h1, h2, h3, .brand, .brand small {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.page-heading h1 { color: var(--ink); letter-spacing: -.8px; }
+.eyebrow, .nav-label, .brand small { color: #486777; }
+.primary { background: #0b3a56; border-color: #0b3a56; box-shadow: 0 3px 12px #0b3a5615; }
+.primary:hover { background: #14516f; border-color: #14516f; color: white; }
+button:hover, .button:hover { border-color: #a9c8d8; }
+button:not(.primary):hover { background: #edf5f8; }
+.nav-link.active, .nav-link.active:hover { color: #0b3a56; background: #e9f2f7; }
+.nav-link:hover { background: #f2f7fa; }
+.workspace-avatar, .heading-icon { color: #0b3a56; background: #edf4f8; border-color: #dce9f0; }
+.sidebar-bottom strong { color: #163343; font-size: 11px; line-height: 1.5; }
+.sidebar-bottom small { line-height: 1.5; }
+.text-button, .object-tools-heading h3, .clipping-check,
+.clipping-fields output, .object-tool-status, .shape-save-status,
+.guide-tip > span, footer > span:first-child { color: #245976; }
+.workflow .current { color: #0b3a56; }
+.workflow .current b { color: #0b3a56; background: #dcecf5; }
+.preview-tag { color: #245976; background: #edf4f8; border-color: #dce9f0; }
+.capture-view.current, .capture-view.active { border-color: #4080a0; background: #eef6fa; }
+.view-presets button.selected, .viewer-display-options button[aria-pressed=true],
+#clipSide[aria-pressed=true] { color: #0b3a56; background: #e4f0f6; border-color: #a9c8d8; }
+.native-capture { border-color: #bdd3e0; background: #f5f9fc; }
+.native-capture strong, .native-capture small, .native-capture > svg { color: #315d76; }
+.viewer-note, .object-tool-help, .camera-help, .interaction-hints { color: #526776; }
+.viewer-note { line-height: 1.65; font-size: 12px; }
+.scan-card[aria-pressed=true] { border-color: #4080a0; box-shadow: 0 0 0 2px #dcecf5; }
+.shape-fields input[type=range], .clipping-fields input[type=range] { accent-color: #245976; }
+.viewer-feedback { color: #70521a; border-color: #e7d4a9; background: #fff9ed; }
+/* Keep capture diagnostics outside the canvas instead of covering the product. */
+.viewer-stage:has(> .viewer-feedback:not([hidden])) #viewer3d { top: 140px; }
+.connection { min-width: 0; }
+@media (max-width: 780px) {
+  .breadcrumb { flex-wrap: wrap; gap: 4px 8px; line-height: 1.5; }
+  .topbar { align-items: flex-start; }
+  .page-heading h1 { font-size: clamp(25px, 5.5vw, 32px); }
+  .viewer-note { font-size: 12px; }
+}
+@media (max-width: 460px) {
+  .viewer-stage:has(> .viewer-feedback:not([hidden])) #viewer3d { top: 166px; }
+}
